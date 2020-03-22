@@ -1,0 +1,13 @@
+#Default port is 8761
+server:
+  port: 8761
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+  serviceUrl:
+   # defaultZone: http://localhost:8761 
+   defaultZone: http://192.168.64.2:8761 
