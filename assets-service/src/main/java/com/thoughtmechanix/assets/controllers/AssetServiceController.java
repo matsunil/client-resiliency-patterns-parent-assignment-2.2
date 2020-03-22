@@ -20,39 +20,75 @@ import java.util.List;
 @RestController
 @RequestMapping(value="v1/organizations/{organizationId}/assets")
 public class AssetServiceController {
-    private static final Logger logger = LoggerFactory.getLogger(AssetServiceController.class);
-    @Autowired
-    private AssetService assetService;
+	private static final Logger logger = LoggerFactory.getLogger(AssetServiceController.class);
+	@Autowired
+	private AssetService assetService;
 
-    @Autowired
-    private ServiceConfig serviceConfig;
+	@Autowired
+	private ServiceConfig serviceConfig;
 
-    @RequestMapping(value="/",method = RequestMethod.GET)
-    public List<Asset> getAssets( @PathVariable("organizationId") String organizationId) {
-        logger.debug("AssetServiceController Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
-        return assetService.getAssetsByOrg(organizationId);
-    }
+	/**
+	 * Get all assets for the organization
+	 * Using @PathVariable organizationId
+	 */
+	@RequestMapping(value="/",method = RequestMethod.GET)
+	public List<Asset> getAssets( @PathVariable("organizationId") String organizationId) {
+		logger.debug("AssetServiceController Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
+		return assetService.getAssetsByOrg(organizationId);
+	}
 
-    @RequestMapping(value="/{assetId}",method = RequestMethod.GET)
-    public Asset getAssets( @PathVariable("organizationId") String organizationId,
-                                @PathVariable("assetId") String assetId) {
+	/**
+	 * Get asset by asset id for organization by organization id
+	 * Using @PathVariable organizationId
+	 * Using @PathVariable assetId
+	 * @throws ResourceNotFoundException 
+	 */
+	@RequestMapping(value="/{assetId}",method = RequestMethod.GET)
+	public Asset getAssets( @PathVariable("organizationId") String organizationId,
+			@PathVariable("assetId") String assetId) {
+		logger.info("Getting asset with organizationId: {} and assetId:{}", organizationId, assetId);
+		return assetService.getAsset(organizationId, assetId);
+	}
 
-        return assetService.getAsset(organizationId, assetId);
-    }
+	/**
+	 * POST asset for organization by organization id
+	 * Using @PathVariable organizationId
+	 * Using @RequestBody asset
+	 */
+	@RequestMapping(value="/",method = RequestMethod.POST)
+	public void saveAssets(@PathVariable("organizationId") String organizationId, 
+			@RequestBody Asset asset) {
+		logger.info("Adding asset: {} with organizationId: {}", asset, organizationId);
+		assetService.saveAsset(organizationId, asset);
+	}
 
-    @RequestMapping(value="{assetId}",method = RequestMethod.PUT)
-    public void updateAssets( @PathVariable("assetId") String assetId, @RequestBody Asset asset) {
-        assetService.updateAsset(asset);
-    }
+	/**
+	 * PUT asset by asset id for organization by organization id
+	 * Using @PathVariable organizationId
+	 * Using @PathVariable assetId
+	 * Using @RequestBody asset
+	 * @throws ResourceNotFoundException
+	 */
+	@RequestMapping(value="{assetId}",method = RequestMethod.PUT)
+	public void updateAssets(@PathVariable("organizationId") String organizationId,
+			@PathVariable("assetId") String assetId, @RequestBody Asset asset) throws ResourceNotFoundException {
+		logger.info("Updating asset: {} with organizationId: {} and assetId: {}", asset, organizationId, assetId);
+		assetService.updateAsset(organizationId, assetId, asset);
+	}
 
-    @RequestMapping(value="/",method = RequestMethod.POST)
-    public void saveAssets(@RequestBody Asset asset) {
-        assetService.saveAsset(asset);
-    }
+	/**
+	 * DELETE asset by organization id and asset id
+	 * Using @PathVariable organizationId
+	 * Using @PathVariable assetId
+	 * @throws ResourceNotFoundException
+	 */
+	@RequestMapping(value="{assetId}",method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public String deleteAssets(@PathVariable("organizationId") String organizationId,
+			@PathVariable("assetId") String assetId) throws ResourceNotFoundException {
+		logger.info("Deleting asset with organizationId: {} and assetId: {}", organizationId, assetId);
+		assetService.deleteAsset(asset);
+		return HttpStatus.OK.toString();
+	}
 
-    @RequestMapping(value="{assetId}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAssets( @PathVariable("assetId") String assetId, @RequestBody Asset asset) {
-         assetService.deleteAsset(asset);
-    }
 }

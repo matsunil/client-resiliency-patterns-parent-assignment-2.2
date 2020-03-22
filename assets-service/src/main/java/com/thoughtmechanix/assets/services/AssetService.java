@@ -4,6 +4,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.thoughtmechanix.assets.clients.OrganizationRestTemplateClient;
 import com.thoughtmechanix.assets.config.ServiceConfig;
+import com.thoughtmechanix.assets.exception.ResourceNotFoundException;
 import com.thoughtmechanix.assets.model.Asset;
 import com.thoughtmechanix.assets.model.Organization;
 import com.thoughtmechanix.assets.repository.AssetRepository;
@@ -178,18 +179,33 @@ public class AssetService {
         return fallbackList;
     } 
 
-    public void saveAsset(Asset asset){
+    public void saveAsset(String organizationId, Asset asset){
         asset.withId( UUID.randomUUID().toString());
+		asset.setOrganizationId(organizationId);
 
         assetRepository.save(asset);
     }
 
-    public void updateAsset(Asset asset){
-      assetRepository.save(asset);
+    public Asset updateAsset(String organizationId, String assetId, Asset assetRequest) throws ResourceNotFoundException {
+		Asset asset = assetRepository.findByOrganizationIdAndAssetId(organizationId, assetId);
+		if (asset != null) {
+			asset.setAssetName(assetRequest.getAssetName());
+			asset.setAssetType(assetRequest.getAssetType());
+			asset.setComment(assetRequest.getComment());
+
+			return assetRepository.save(asset);
+		}
+
+		throw new ResourceNotFoundException("No asset found with organizationId="+organizationId+" and assetId="+assetId);
     }
 
-    public void deleteAsset(Asset asset){
-        assetRepository.delete( asset.getAssetId());
+    public void deleteAsset(String organizationId, String assetId) throws ResourceNotFoundException {
+		Asset asset = assetRepository.findByOrganizationIdAndAssetId(organizationId, assetId);
+		if (asset != null) {
+			assetRepository.delete( asset.getAssetId());
+		} else {
+			throw new ResourceNotFoundException("No asset found with organizationId="+organizationId+" and assetId="+assetId);
+		}
     }
 
 }
