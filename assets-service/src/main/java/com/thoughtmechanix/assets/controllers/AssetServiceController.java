@@ -3,6 +3,7 @@ package com.thoughtmechanix.assets.controllers;
 import com.thoughtmechanix.assets.model.Asset;
 import com.thoughtmechanix.assets.services.AssetService;
 import com.thoughtmechanix.assets.config.ServiceConfig;
+import com.thoughtmechanix.assets.exception.ResourceNotFoundException;
 import com.thoughtmechanix.assets.utils.UserContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,7 @@ public class AssetServiceController {
 	public String deleteAssets(@PathVariable("organizationId") String organizationId,
 			@PathVariable("assetId") String assetId) throws ResourceNotFoundException {
 		logger.info("Deleting asset with organizationId: {} and assetId: {}", organizationId, assetId);
-		assetService.deleteAsset(asset);
+		assetService.deleteAsset(organizationId, assetId);
 		return HttpStatus.OK.toString();
 	}
 
