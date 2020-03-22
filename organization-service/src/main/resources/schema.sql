@@ -9,7 +9,7 @@ CREATE TABLE organizations (
 
 
 INSERT INTO organizations (organization_id, name, contact_name, contact_email, contact_phone)
-VALUES ('4d7b9c40-5c8f-11ea-bc55-0242ac130003', 'HR-Managing', 'Doug Johnson','doug.johnson@hrmanaging.com', '781-587-3456');
+VALUES ('4d7b9c40-5c8f-11ea-bc55-0242ac130003', 'customer-crm-co', 'Mark Balster', 'mark.balster@custcrmco.com', '823-555-1212');
 
 INSERT INTO organizations (organization_id, name, contact_name, contact_email, contact_phone)
-VALUES ('d1375b3c-6171-11ea-bc55-0242ac130003', 'customer-crm-co', 'Mark Balster', 'mark.balster@custcrmco.com', '823-555-1212');
+VALUES ('d1375b3c-6171-11ea-bc55-0242ac130003', 'HR-Managing', 'Doug Johnson','doug.johnson@hrmanaging.com', '781-587-3456');

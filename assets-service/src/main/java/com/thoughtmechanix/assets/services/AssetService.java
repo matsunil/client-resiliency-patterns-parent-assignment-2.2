@@ -101,19 +101,19 @@ public class AssetService {
        randomlyRunLong();
 
        return assetRepository.findByOrganizationId(organizationId);
-   }
+   } 
    
     
     //Listing 5.4 Customizing the time out on a circuit breaker call.See below
     //Comment out for other Listings
- /*  @HystrixCommand(
+  /* @HystrixCommand(
     		  commandProperties=
     		     {@HystrixProperty(
     		   name="execution.isolation.thread.timeoutInMilliseconds",
     		   value="12000")}) 
    public List<Asset> getAssetsByOrg(String organizationId){
 	   randomlyRunLong();
-	   return AssetRepository.findByOrganizationId(organizationId);
+	   return assetRepository.findByOrganizationId(organizationId);
    } */
     
     //Listing 5.5 Implementing a fallback in Hystrix. See below
@@ -139,7 +139,7 @@ public class AssetService {
     
     //Listing 5.7 Configuring the behavior of a circuit breaker
     //Comment out for  other Listings
-  /*  @HystrixCommand(
+   /* @HystrixCommand(
     		   fallbackMethod = "buildFallbackAssetList",
     		   threadPoolKey = "assetByOrgThreadPool",
     		   threadPoolProperties ={
